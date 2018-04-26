@@ -2,7 +2,7 @@ This script will take a CSV file format which contains both within string commas
 
 For example:
 - Raw CSV Input:
-```python
+```text
 "this is a test","she said "hey" to me","i was like "no way, jose!!@@","","""
 "check one two"
 "the "real" slim shady","his name is "shady, slim" I think"
@@ -17,7 +17,7 @@ eh?"
 </p>
 
 - Output:
-```python
+```text
 "this is a test","she said ""hey"" to me","i was like ""no way, jose!!@@"","""","""""
 "check one two"
 "the ""real"" slim shady","his name is ""shady, slim"" I think"
@@ -34,3 +34,4 @@ eh?"
 
 Requirements:
 1. All cells are quoted to begin with
+2. Cells seperated by '","' (can change in code if neccessary)

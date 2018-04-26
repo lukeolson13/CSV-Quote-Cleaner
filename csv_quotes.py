@@ -14,22 +14,41 @@ class CSV_Quotes():
         '''
         Initializer
         Inputs:
-            input_file, output_file
+            input_file - file to clean
+            output_file - output location and name
         '''
         self.input_file = input_file
         self.output_file = output_file
 
     def flag_cell(self, cell, index):
+        '''
+        Flag cell in there are an odd number of quotes used (quote spans multiple "cells")
+        Input:
+            cell - current cell (according to first pass parser)
+            index - index of cell in row
+        Returns:
+            True if the cell needs to be considered for a multi-cell long quote
+        '''
         count = cell.count('"')
 
         if ((count % 2 == 0) or 
-            ( (index == 0) and (count == 1) )):
+            ( (index == 0) and (count == 1) )): # edge case of multiple line row with only single quote in first cell of current line
             return False
 
         else:
             return True
 
     def logic(self, line):
+        '''
+        Take care of beggining and ending quotes and parse line
+        Inputs:
+            line - current line in file
+        Returns:
+            out_arr - each cell in a list
+            flag_arr - indices of cells with odd number of quotes
+            start_char - starting character of line (if applicable)
+            end_char - ending character(s) of line (if applicable)
+        '''
         start_index = 0
         start_char = ''
         end_index = None
@@ -60,7 +79,16 @@ class CSV_Quotes():
         return out_arr, flag_arr, start_char, end_char
 
     def get_new_line(self, out_arr, flag_arr, start_char, end_char):
-
+        '''
+        Create new file line if any of the cells get flagged
+        Inputs:
+            out_arr - each cell in a list
+            flag_arr - indices of cells with odd number of quotes
+            start_char - starting character of line (if applicable)
+            end_char - ending character(s) of line (if applicable)
+        Returns:
+            Full line to add to output
+        '''
         norm = True
         new_line = ''
         last_used = 0
@@ -88,6 +116,9 @@ class CSV_Quotes():
         return start_char + new_line + end_char
 
     def main(self):
+        '''
+        Open files and run above logic
+        '''
         with open(self.input_file, 'r', encoding='ISO-8859-1') as f_in:
             with open(self.output_file, 'w') as f_out:
                 for line in f_in:
@@ -101,5 +132,7 @@ class CSV_Quotes():
                     f_out.write(new_line)
 
 if __name__ == '__main__':
-    c_q = CSV_Quotes('data/test.csv', 'data/test_new.csv')
+    input_file = 'data/test.csv'
+    output_file = 'data/test_new.csv'
+    c_q = CSV_Quotes(input_file, output_file)
     c_q.main()
